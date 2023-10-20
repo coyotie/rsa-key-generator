@@ -13,8 +13,8 @@ function remove_label_text(label_id) {
 
 // Actions
 const generateKeys = async () => {
-    bits = document.getElementById('select-bits').value
-    let { privateKey, publicKey } = await window.utils.generateKeys(parseInt(bits))
+    keyType = document.getElementById('select-keyType').value
+    let { privateKey, publicKey } = await window.utils.generateKeys(keyType)
     document.getElementById('private-key-text-area').value = privateKey
     document.getElementById('public-key-text-area').value = publicKey
 
@@ -54,15 +54,21 @@ const saveKey = async (input_key) => {
 
     let label_id = `${lower_input_key}-key-text-area-tooltip`
     // Display error tooltip for 5s
-    if (result) {
+    if (result.startsWith('Error')) {
         tip_color = 'text-red-500';
-    } else {
+    } else if (result) {
         tip_color = 'text-green-500';
         result = `${input_key} Key saved`;
+    } else {
+        result = ""
     }
-    document.getElementById(label_id).classList.add(tip_color);
-    document.getElementById(label_id).innerText = result;
-    setTimeout(function () { remove_label_text(label_id) }, 5000);
+
+    if (result) {
+        document.getElementById(label_id).classList.add(tip_color);
+        document.getElementById(label_id).innerText = result;
+        setTimeout(function () { remove_label_text(label_id) }, 5000);
+    }
+    
 }
 
 // Event listeners
